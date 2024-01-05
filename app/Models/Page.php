@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Product extends Model
+class Page extends Model
 {
     use HasFactory;
     use HasSlug;
     use SoftDeletes;
+    protected $table  = 'pages';
 
-    protected $fillable = ['title', 'description', 'price', 'published', 'created_by', 'updated_by'];
+    protected $fillable = ['id','meta','title','name','type','published','slug','short_description','long_description',
+        'created_by', 'updated_by'];
 
     /**
      * Get the options for generating the slug.
@@ -30,20 +32,4 @@ class Product extends Model
     {
         return 'slug';
     }
-
-    public function images()
-    {
-        return $this->hasMany(ProductImage::class)->orderBy('position');
-    }
-
-    public function getImageAttribute()
-    {
-        return $this->images->count() > 0 ? $this->images->get(0)->url : null;
-    }
-
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'product_categories');
-    }
-
 }

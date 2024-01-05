@@ -49,6 +49,7 @@ export function getProducts({commit}, {
         })
 }
 
+
 export function getProduct({commit}, id) {
     return axiosClient.get(`/products/${id}`)
 }
@@ -227,4 +228,71 @@ export function updateCategory({commit}, category) {
 
 export function deleteCategory({commit}, id) {
     return axiosClient.delete(`/categories/${id}`)
+}
+
+
+// -----------------PAGeS
+export function getPages({commit}, {
+    url = null,
+    search = '',
+    per_page = PRODUCTS_PER_PAGE,
+    sort_field,
+    sort_direction
+} = {}) {
+    commit('setPages', [true])
+    url = url || 'pages';
+    return axiosClient.get(url, {
+        params: {search, per_page, sort_field, sort_direction}
+    })
+        .then(res => {
+            commit('setPages', [false, res.data])
+        })
+        .catch(() => {
+            commit('setPages', [false])
+        })
+}
+
+export function getPage({commit}, id) {
+    return axiosClient.get(`/pages/${id}`)
+}
+
+export function deletePage({commit}, id) {
+    return axiosClient.delete(`/pages/${id}`)
+}
+
+
+export function createPage({commit}, page) {
+
+    const form = new FormData();
+    form.append('title', page.title);
+    form.append('name', page.name);
+    form.append('meta', page.meta);
+    form.append('short_description', page.short_description || '');
+    form.append('long_description', page.long_description || '');
+    form.append('published', page.published ? 1 : 0);
+    form.append('type', page.type ? 1 : 0);
+    page = form;
+
+    return axiosClient.post('/pages', page)
+}
+
+export function updatePage({commit}, page) {
+    const id = page.id
+
+    const form = new FormData();
+    form.append('id', page.id);
+    form.append('name', page.name);
+    form.append('title', page.title);
+    form.append('meta', page.meta);
+    form.append('type', page.type ? 1 : 0);
+    form.append('short_description', page.short_description || '');
+    form.append('long_description', page.long_description || '');
+    form.append('published', page.published ? 1 : 0);
+    form.append('_method', 'PUT');
+
+    page = form;
+
+
+
+    return axiosClient.post(`/pages/${id}`, page)
 }

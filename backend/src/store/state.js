@@ -15,6 +15,16 @@ const state = {
         limit: null,
         total: null
     },
+    pages: {
+        loading: false,
+        data: [],
+        links: [],
+        from: null,
+        to: null,
+        page: 1,
+        limit: null,
+        total: null
+    },
     orders: {
         loading: false,
         data: [],

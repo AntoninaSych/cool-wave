@@ -5,8 +5,10 @@ import store from "../store/index.js";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
 import Products from "../views/Products/Products.vue";
+import Pages from "../views/Pages/Pages.vue";
 import Categories from "../views/Categories/Categories.vue";
 import ProductForm from "../views/Products/ProductForm.vue";
+import PageForm from "../views/Pages/PageForm.vue";
 import CustomerView from "../views/Customers/CustomerView.vue";
 import Orders from "../views/Orders/Orders.vue";
 import NotFound from "../views/NotFound.vue";
@@ -39,6 +41,11 @@ const routes = [
                 component: Products
             },
             {
+                path: 'pages',
+                name: 'app.pages',
+                component: Pages
+            },
+            {
                 path: 'categories',
                 name: 'app.categories',
                 component: Categories
@@ -52,6 +59,19 @@ const routes = [
                 path: 'products/:id',
                 name: 'app.products.edit',
                 component: ProductForm,
+                props: {
+                    id: (value) => /^\d+$/.test(value)
+                }
+            },
+            {
+                path: 'pages/create',
+                name: 'app.pages.create',
+                component: PageForm
+            },
+            {
+                path: 'pages/:id',
+                name: 'app.pages.edit',
+                component: PageForm,
                 props: {
                     id: (value) => /^\d+$/.test(value)
                 }

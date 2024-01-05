@@ -10,7 +10,7 @@
         <div class="flex flex-row  inline-block align-middle flex-shrink-0 justify-center mt-2 ml-10">
             <img  class="object-cover h-48 w-48	" src="/images/logo-0.png" alt="Workflow logo">
             <div class="m-auto">
-                <span class=" inline-block align-middle uppercase font-montserrat tracking-wide font-bold" style="font-size: xx-large;">COOL WAVE</span><br>
+                <span class=" inline-block align-middle uppercase font-montserrat tracking-wide font-bold " style="font-size: xx-large;">COOL WAVE</span><br>
                 <small class="text-white tracking-wider font-montserrat font-bold mt:-3" style="font-size: large;">Light Fast Safe</small>
             </div>
         </div>
@@ -18,7 +18,7 @@
         <div>
             <div class=" max-w-7xl items-center  p-6 "> Call Us: +1 24234 234 234, +1 757 657 7578</div>
             {{--TOP SEARCH--}}
-            <div  >
+            <div >
                 <form action="" method="GET" class="flex-1" class="text-black">
                     <input type="text" name="search" placeholder="Search for the products" class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md w-full text-black"
                              value="{{request()->get('search')}}"/>

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
-use App\Http\Controllers\ProfileController;
+ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
@@ -21,6 +21,7 @@ use App\Http\Controllers\OrderController;
 Route::middleware(['guestOrVerified'])->group(function () {
     Route::get('/', [\App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
     Route::get('/product/{product:slug}', [FrontendProductController::class, 'show'])->name('product.show');
+    Route::get('/page/{page:slug}', [\App\Http\Controllers\Frontend\PageController::class, 'show'])->name('product.show');
     Route::get('/category/{category:slug}', [\App\Http\Controllers\ProductController::class, 'byCategory'])->name('byCategory');
 
     Route::prefix('/cart')->name('cart.')->group(function () {

@@ -2,7 +2,7 @@
 <template>
   <div class="flex items-center justify-between mb-3">
     <h1 v-if="!loading" class="text-3xl font-semibold">
-      {{ product.id ? `Update product: "${product.title}"` : 'Create new Product' }}
+      {{ page.id ? `Update page: "${page.title}"` : 'Create new Page' }}
     </h1>
   </div>
   <div class="bg-white rounded-lg shadow animate-fade-in-down">
@@ -11,22 +11,19 @@
     <form v-if="!loading" @submit.prevent="onSubmit">
       <div class="grid grid-cols-3">
         <div class="col-span-2 px-4 pt-5 pb-4">
-          <CustomInput class="mb-2" v-model="product.title" label="Product Title" :errors="errors['title']"/>
-          <CustomInput type="richtext" class="mb-2" v-model="product.description" label="Description" editorConfig=""
-                       :errors="errors['description']"/>
-          <CustomInput type="number" class="mb-2" v-model="product.price" label="Price" prepend="$"
-                       :errors="errors['price']"/>
-          <CustomInput type="checkbox" class="mb-2" v-model="product.published" label="Published"
+          <CustomInput class="mb-2" v-model="page.name" label="Display in Menu" :errors="errors['name']"/>
+          <CustomInput class="mb-2" v-model="page.title" label="Page Title" :errors="errors['title']"/>
+          <CustomInput class="mb-2" v-model="page.meta" label="Meta Tags" :errors="errors['meta']"/>
+          <span class="text-gray-700">Short Description:</span>
+          <CustomInput type="richtext" class="mb-2" v-model="page.short_description" label="Short Description"
+                       :errors="errors['short_description']"/>
+          <span class="text-gray-700">Long Description:</span>
+          <CustomInput type="richtext" class="mb-2" v-model="page.long_description" label="Long Description"
+                       :errors="errors['long_description']"/>
+          <CustomInput type="checkbox" class="mb-2" v-model="page.type" label="Page"
+                       :errors="errors['type']"/>
+          <CustomInput type="checkbox" class="mb-2" v-model="page.published" label="Published"
                        :errors="errors['published']"/>
-          <treeselect v-model="product.categories" :multiple="true" :options="options" :errors="errors['categories']"/>
-        </div>
-        <div class="col-span-1 px-4 pt-5 pb-4">
-          <image-preview v-model="product.images"
-                         :images="product.images"
-                         v-model:deleted-images="product.deleted_images"
-                         v-model:image-positions="product.image_positions"
-
-          />
         </div>
       </div>
       <footer class="bg-gray-50 rounded-b-lg px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
@@ -41,7 +38,7 @@
                           text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500">
           Save & Close
         </button>
-        <router-link :to="{name: 'app.products'}"
+        <router-link :to="{name: 'app.pages'}"
                      class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                      ref="cancelButtonRef">
           Cancel
@@ -65,52 +62,46 @@ import axiosClient from "../../axios.js";
 const route = useRoute()
 const router = useRouter()
 const errors = ref({});
-const product = ref({
+const page = ref({
   id: null,
   title: null,
-  images: [],
-  deleted_images: [],
-  image_positions: {},
-  description: '',
-  price: null,
+  name: null,
+  meta: null,
+  short_description: '',
+  long_description: '',
   published: false,
-  categories: []
+  type: false,
 })
 
 const loading = ref(false)
 const options = ref([])
 
-const emit = defineEmits(['update:modelValue', 'close', 'update:imagePositions'])
+const emit = defineEmits(['update:modelValue', 'close' ])
 
 onMounted(() => {
   if (route.params.id) {
     loading.value = true
-    store.dispatch('getProduct', route.params.id)
+    store.dispatch('getPage', route.params.id)
         .then((response) => {
           loading.value = false;
-          product.value = response.data
+          page.value = response.data
         })
   }
-
-  axiosClient.get('/categories/tree')
-      .then(result => {
-        options.value = result.data
-      })
 })
 
 function onSubmit($event, close = false) {
   loading.value = true
 
-  if (product.value.id) {
-    store.dispatch('updateProduct', product.value)
+  if (page.value.id) {
+    store.dispatch('updatePage', page.value)
         .then(response => {
           loading.value = false;
           if (response.status === 200) {
-            product.value = response.data
-            store.commit('showToast', 'Product was successfully updated');
-            store.dispatch('getProducts')
+            page.value = response.data
+            store.commit('showToast', 'Page was successfully updated');
+            store.dispatch('getPages')
             if (close) {
-              router.push({name: 'app.products'})
+              router.push({name: 'app.pages'})
             }
             errors.value={}
           }
@@ -121,18 +112,19 @@ function onSubmit($event, close = false) {
           errors.value = err.response.data.errors()
         })
   } else {
-    store.dispatch('createProduct', product.value)
+    store.dispatch('createPage', page.value)
         .then(response => {
           loading.value = false;
           if (response.status === 201) {
-            product.value = response.data
-            store.commit('showToast', 'Product was successfully created');
-            store.dispatch('getProducts')
+            page.value = response.data
+            store.commit('showToast', 'Page was successfully created');
+            store.dispatch('getPages')
             if (close) {
-              router.push({name: 'app.products'})
+              router.push({name: 'app.pages'})
             } else {
-              product.value = response.data
-              router.push({name: 'app.products.edit', params: {id: response.data.id}})
+              console.log(response);
+              page.value = response.data
+              router.push({name: 'app.pages.edit', params: {id: response.data.id}})
             }
             errors.value={}
           }
@@ -140,7 +132,7 @@ function onSubmit($event, close = false) {
         })
         .catch(err => {
           loading.value = false;
-          errors.value = err.response.data.errors
+          errors.value = err.response.data.errors()
         })
   }
 }

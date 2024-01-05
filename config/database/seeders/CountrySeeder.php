@@ -1,10 +1,9 @@
 <?php
 
-namespace Database\Seeders;
+namespace config\database\seeders;
 
 use App\Models\Country;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 
 class CountrySeeder extends Seeder

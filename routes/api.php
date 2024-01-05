@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\api\DashboardController;
 use \App\Http\Controllers\ReportController;
 use \App\Http\Controllers\api\CategoryController;
+use App\Http\Controllers\api\PageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +24,7 @@ Route::get('/orders/statuses', [OrderController::class, 'getStatuses']);
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
+
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('categories', CategoryController::class)->except('show');
     Route::get('/categories/tree', [CategoryController::class, 'getAsTree']);
@@ -30,6 +32,8 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('users', UserController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('pages', PageController::class);
+
 
 
     // Dashboard Routes
