@@ -74,6 +74,7 @@ document.addEventListener("alpine:init", async () => {
                         this.$dispatch('cart-change', {count: result.count})
                         this.cartItems = this.cartItems.filter(p => p.id !== product.id)
                     })
+                this.changeQuantity();
             },
             changeQuantity() {
                 post(this.product.updateQuantityUrl, {quantity: product.quantity})

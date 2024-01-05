@@ -6,9 +6,38 @@
         @cart-change.window="cartItemsCount = $event.detail.count"
         class="flex justify-between bg-slate-800 shadow-md text-white"
 >
-    <div>
-        <a href="{{route('product.index')}}" class="block py-navbar-item pl-5"> Logo </a>
-    </div>
+        <a href="{{route('product.index')}}">
+        <div class="flex flex-row  inline-block align-middle flex-shrink-0 justify-center mt-2 ml-10">
+            <img  class="object-cover h-48 w-48	" src="/images/logo-0.png" alt="Workflow logo">
+            <div class="m-auto">
+                <span class=" inline-block align-middle uppercase font-montserrat tracking-wide font-bold" style="font-size: xx-large;">COOL WAVE</span><br>
+                <small class="text-white tracking-wider font-montserrat font-bold mt:-3" style="font-size: large;">Light Fast Safe</small>
+            </div>
+        </div>
+        </a>
+        <div>
+            <div class=" max-w-7xl items-center  p-6 "> Call Us: +1 24234 234 234, +1 757 657 7578</div>
+            {{--TOP SEARCH--}}
+            <div  >
+                <form action="" method="GET" class="flex-1" class="text-black">
+                    <input type="text" name="search" placeholder="Search for the products" class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md w-full text-black"
+                             value="{{request()->get('search')}}"/>
+
+
+{{--                             x-model="searchKeyword"/>--}}
+                </form>
+            </div>
+            {{--END TOP SEARCH--}}
+            <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 mt-15 lg:px-8" aria-label="Global">
+                <div class="hidden lg:flex lg:gap-x-12">
+                    <a href="#" class=" uppercase font-semibold leading-6 text-white-900">About Us</a>
+                    <a href="#" class=" uppercase font-semibold leading-6 text-white-900">Delivery</a>
+                    <a href="#" class=" uppercase font-semibold leading-6 text-white-900">Contacts</a>
+
+                </div>
+            </nav>
+
+        </div>
 
     <!-- Responsive Menu -->
     <div
@@ -197,6 +226,7 @@
     <!--/ Responsive Menu -->
 
     <nav class="hidden md:block">
+
         <ul class="grid grid-flow-col items-center">
             <li>
                 <a
@@ -371,6 +401,7 @@
                 </li>
             @endif
         </ul>
+
     </nav>
     <button
             @click="mobileMenuOpen = !mobileMenuOpen"

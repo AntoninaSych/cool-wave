@@ -112,7 +112,9 @@ function onSubmit($event, close = false) {
             if (close) {
               router.push({name: 'app.products'})
             }
+            errors.value={}
           }
+
         })
         .catch(err => {
           loading.value = false;
@@ -132,7 +134,9 @@ function onSubmit($event, close = false) {
               product.value = response.data
               router.push({name: 'app.products.edit', params: {id: response.data.id}})
             }
+            errors.value={}
           }
+
         })
         .catch(err => {
           loading.value = false;

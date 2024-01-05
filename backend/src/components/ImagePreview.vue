@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-wrap gap-1">
-    <pre>
-      {{ imageUrls.map(im => im.id) }}
-    </pre>
+<!--    <pre>-->
+<!--      {{ imageUrls.map(im => im.id) }}-->
+<!--    </pre>-->
     <Sortable
         :list="imageUrls"
         item-key="id"

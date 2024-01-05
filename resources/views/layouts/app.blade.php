@@ -18,9 +18,17 @@
     </style>
 </head>
 <body>
-@include('layouts.navigation')
 
-<main>
+<?php
+/** @var \Illuminate\Database\Eloquent\Collection $products */
+$categoryList = \App\Models\Category::getActiveAsTree();
+
+?>
+
+@include('layouts.navigation')
+<x-category-list :category-list="$categoryList" class="-ml-15 -mt-15 -mr-15 px-4"/>
+
+<main class="p-5">
     {{$slot}}
 </main>
 

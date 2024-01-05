@@ -1,7 +1,15 @@
 <x-app-layout>
-    <h2>Product {{$product->title}}</h2>
+
 
     <main class="p-5">
+{{--        <h2>Product {{$product->title}}</h2>--}}
+        <nav class="container">
+            <ol class="list-reset py-4 pl-4 rounded flex bg-grey-light text-grey">
+                <li class="px-2"><a href="#" class="no-underline text-indigo">Home</a></li>
+                <li>/</li>
+                <li class="px-2"> {{$product->title}}</li>
+            </ol>
+        </nav>
         <div class="container mx-auto" x-data="productItem({{ json_encode([
                         'id' => $product->id,
                         'slug' => $product->slug,
