@@ -234,6 +234,7 @@ class CheckoutController extends Controller
                 if ($payment) {
                     $this->updateStatus($payment);
                 }
+                break;
             default:
                 echo 'Received unknown event type ' . $event->type;
         }
