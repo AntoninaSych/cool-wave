@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         [x-cloak] {
             display: none !important;
@@ -28,7 +29,7 @@ $categoryList = \App\Models\Category::getActiveAsTree();
 @include('layouts.navigation')
 <x-category-list :category-list="$categoryList" class="-ml-15 -mt-15 -mr-15 px-4"/>
 
-<main class="p-5">
+<main  >
     {{$slot}}
 </main>
 

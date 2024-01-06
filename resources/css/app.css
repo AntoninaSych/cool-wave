@@ -95,4 +95,24 @@ body {
 .category-list > .category-item > .category-list > .category-item > .category-list {
     left: 100%;
     top: 0;
+
+}
+.parallax {
+    /* The image used */
+    background-image:  url('../../public/images/main-bg.jpg');
+
+    /* Set a specific height */
+    min-height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.background-cover-image {
+    background-image: url('../../public/images/main-bg.jpg');
+    background-size: cover;
+    background-position: center;
 }

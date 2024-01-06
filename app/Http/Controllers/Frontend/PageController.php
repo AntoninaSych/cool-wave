@@ -20,4 +20,11 @@ class PageController extends Controller
         return view('page.show')->with(['page' => $page]);
     }
 
+    public function home()
+    {
+        $pages = Page::query()->where('type', 1)->orderBy('created_at', 'desc')->get();
+
+        return view('page.home')->with(['pages' => $pages]);
+    }
+
 }

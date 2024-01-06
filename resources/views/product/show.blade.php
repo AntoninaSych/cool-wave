@@ -5,7 +5,7 @@
 {{--        <h2>Product {{$product->title}}</h2>--}}
         <nav class="container">
             <ol class="list-reset py-4 pl-4 rounded flex bg-grey-light text-grey">
-                <li class="px-2"><a href="#" class="no-underline text-indigo">Home</a></li>
+                <li class="px-2"><a href="{{route('product.index')}}" class="no-underline text-indigo">Home</a></li>
                 <li>/</li>
                 <li class="px-2"> {{$product->title}}</li>
             </ol>
@@ -89,11 +89,11 @@
                                 </svg>
                             </a>
                         </div>
-                        <div class="flex">
+                        <div class="flex m-2">
                             <template x-for="image in images">
                                 <a
                                         @click.prevent="activeImage = image"
-                                        class="cursor-pointer w-[80px] h-[80px] border border-gray-300 hover:border-purple-500 flex items-center justify-center"
+                                        class="m-1 cursor-pointer w-[80px] h-[80px] border border-gray-300 hover:border-purple-500 flex items-center justify-center"
                                         :class="{'border-purple-600': activeImage === image}"
                                 >
                                     <img :src="image" alt="" class="w-auto max-auto max-h-full"/>
@@ -143,7 +143,7 @@
                     <div class="mb-6" x-data="{expanded: false}">
                         <div
                                 x-show="expanded"
-                                x-collapse.min.120px
+                                x-collapse.min.200px
                                 class="text-gray-500 wysiwyg-content">{!! $product->description !!}
 
                         </div>

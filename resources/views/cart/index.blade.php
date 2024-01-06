@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container lg:w-2/3 xl:w-2/3 mx-auto">
+    <div class="container lg:w-2/3 xl:w-2/3 mx-auto p-5">
         <h1 class="text-3xl font-bold mb-6">Your Cart Items</h1>
 
         <div x-data="{

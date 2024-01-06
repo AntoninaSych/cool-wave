@@ -19,21 +19,20 @@
             <div class=" max-w-7xl items-center  p-6 "> Call Us: +1 24234 234 234, +1 757 657 7578</div>
             {{--TOP SEARCH--}}
             <div >
-                <form action="" method="GET" class="flex-1" class="text-black">
+                <form action="{{route('product.search')}}" method="GET" class="flex-1" class="text-black">
                     <input type="text" name="search" placeholder="Search for the products" class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md w-full text-black"
                              value="{{request()->get('search')}}"/>
-
-
-{{--                             x-model="searchKeyword"/>--}}
                 </form>
             </div>
             {{--END TOP SEARCH--}}
+            <?php
+            $pages = \App\Models\Page::query()->where('type',1)->get();
+            ?>
             <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 mt-15 lg:px-8" aria-label="Global">
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="#" class=" uppercase font-semibold leading-6 text-white-900">About Us</a>
-                    <a href="#" class=" uppercase font-semibold leading-6 text-white-900">Delivery</a>
-                    <a href="#" class=" uppercase font-semibold leading-6 text-white-900">Contacts</a>
-
+                    @foreach($pages as $page)
+                         <a href="{{route('page.show', $page->slug )}}" class=" uppercase font-semibold leading-6 text-white-900">{{$page->name}}</a>
+                    @endforeach
                 </div>
             </nav>
 

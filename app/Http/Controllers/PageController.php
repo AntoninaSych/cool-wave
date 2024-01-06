@@ -31,7 +31,7 @@ class PageController extends Controller
 
     public function view(Page $product)
     {
-        return view('product.view', ['product' => $product]);
+        return view('page.show', ['page' => $product]);
     }
 
     private function renderPages(Builder $query)

@@ -19,9 +19,15 @@ use App\Http\Controllers\OrderController;
 
 
 Route::middleware(['guestOrVerified'])->group(function () {
+
+
+
     Route::get('/', [\App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
+
+    Route::get('/product/search', [\App\Http\Controllers\ProductController::class, 'index'])->name('product.search');
+    Route::get('/page/home', [\App\Http\Controllers\Frontend\PageController::class, 'home'])->name('page.home');
     Route::get('/product/{product:slug}', [FrontendProductController::class, 'show'])->name('product.show');
-    Route::get('/page/{page:slug}', [\App\Http\Controllers\Frontend\PageController::class, 'show'])->name('product.show');
+    Route::get('/page/{page:slug}', [\App\Http\Controllers\Frontend\PageController::class, 'show'])->name('page.show');
     Route::get('/category/{category:slug}', [\App\Http\Controllers\ProductController::class, 'byCategory'])->name('byCategory');
 
     Route::prefix('/cart')->name('cart.')->group(function () {
@@ -29,8 +35,8 @@ Route::middleware(['guestOrVerified'])->group(function () {
         Route::post('/add/{product:slug}', [CartController::class, 'add'])->name('add');
         Route::post('/remove/{product:slug}', [CartController::class, 'remove'])->name('remove');
         Route::post('/update-quantity/{product:slug}', [CartController::class, 'updateQuantity'])->name('update-quantity');
-    });
-});
+
+});});
 
 
 //Route::get('/dashboard', function () {
