@@ -16,7 +16,7 @@
         </div>
         </a>
         <div>
-            <div class=" max-w-7xl items-center  p-6 "> Call Us: +1 24234 234 234, +1 757 657 7578</div>
+            <div class=" max-w-7xl  p-6 "> Call Us : + 1 3479 022 065 </div>
             {{--TOP SEARCH--}}
             <div >
                 <form action="{{route('product.search')}}" method="GET" class="flex-1" class="text-black">
@@ -29,9 +29,9 @@
             $pages = \App\Models\Page::query()->where('type',1)->get();
             ?>
             <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 mt-15 lg:px-8" aria-label="Global">
-                <div class="hidden lg:flex lg:gap-x-12">
+                <div class="  lg:flex lg:gap-x-12">
                     @foreach($pages as $page)
-                         <a href="{{route('page.show', $page->slug )}}" class=" uppercase font-semibold leading-6 text-white-900">{{$page->name}}</a>
+                         <a href="{{route('page.show', $page->slug )}}" class=" uppercase font-semibold leading-6 text-yellow-100  hover:text-gray-50">{{$page->name}}</a>
                     @endforeach
                 </div>
             </nav>
