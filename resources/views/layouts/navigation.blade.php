@@ -4,21 +4,18 @@
         cartItemsCount: {{ \App\Classes\Helpers\Cart::getCartItemsCount() }},
     }"
         @cart-change.window="cartItemsCount = $event.detail.count"
-        class="flex justify-between bg-slate-800 shadow-md text-white"
+        class="sm:flex sm:justify-between bg-slate-800 shadow-md text-white "
 >
+
         <a href="{{route('product.index')}}">
         <div class="flex flex-row  inline-block align-middle flex-shrink-0 justify-center mt-2 ml-10">
-            <img  class="object-cover h-48 w-48	" src="/images/logo-0.png" alt="Workflow logo">
-            <div class="m-auto">
-                <span class=" inline-block align-middle uppercase font-montserrat tracking-wide font-bold " style="font-size: xx-large;">COOL WAVE</span><br>
-                <small class="text-white tracking-wider font-montserrat font-bold mt:-3" style="font-size: large;">Light Fast Safe</small>
-            </div>
+            <img  class="object-cover h-48 w-48	" src="/images/logo.svg" alt="Workflow logo">
         </div>
         </a>
         <div>
-            <div class=" max-w-7xl  p-6 "> Call Us : + 1 3479 022 065 </div>
+            <div class=" sm:max-w-7xl sm:p-6 "><a href="tel:+13479022065"> Call Us : + 1 3479 022 065 </a></div>
             {{--TOP SEARCH--}}
-            <div >
+            <div class="invisible  sm:visible">
                 <form action="{{route('product.search')}}" method="GET" class="flex-1" class="text-black">
                     <input type="text" name="search" placeholder="Search for the products" class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md w-full text-black"
                              value="{{request()->get('search')}}"/>
@@ -28,7 +25,7 @@
             <?php
             $pages = \App\Models\Page::query()->where('type',1)->get();
             ?>
-            <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 mt-15 lg:px-8" aria-label="Global">
+            <nav class="hidden sm:block mx-auto flex max-w-7xl items-center justify-between p-6 mt-15 lg:px-8" aria-label="Global">
                 <div class="  lg:flex lg:gap-x-12">
                     @foreach($pages as $page)
                          <a href="{{route('page.show', $page->slug )}}" class=" uppercase font-semibold leading-6 text-yellow-100  hover:text-gray-50">{{$page->name}}</a>
@@ -402,23 +399,27 @@
         </ul>
 
     </nav>
-    <button
-            @click="mobileMenuOpen = !mobileMenuOpen"
-            class="p-4 block md:hidden"
-    >
-        <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-        >
-            <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
-            />
-        </svg>
-    </button>
+ <div class="grid justify-items-start">
+     <div class="justify-self-end"> <button
+                 @click="mobileMenuOpen = !mobileMenuOpen"
+                 class="p-4   md:hidden "
+         >
+             <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     class="h-6 w-6"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2"
+             >
+                 <path
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         d="M4 6h16M4 12h16M4 18h16"
+                 />
+             </svg>
+         </button></div>
+
+ </div>
+
 </header>
