@@ -99,6 +99,7 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
                 @endforeach
             </ul>
         </div>
+        <div  class="   flex justify-end align-middle mr-4  mt-2"> <div class="flex text-white mt-1 align-middle">FOLLOW US</div> -  <a href="https://www.instagram.com/stories/coolwaveua/3275441465802243794?utm_source=ig_story_item_share&igsh=MTc4MmM1YmI2Ng=="><img src="/images/instagram.webp" class=" flex h-8"> </a> </div>
         <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
         <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="{{route('page.show', $page->slug )}}" class="hover:underline">Cool Wave</a>. All Rights Reserved.</span>
     </div>

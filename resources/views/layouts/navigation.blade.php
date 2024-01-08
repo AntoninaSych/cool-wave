@@ -13,10 +13,13 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
         class="sm:flex sm:justify-between bg-slate-800 shadow-md text-white "
 >
     <div class="grid justify-items-start">
-        <div class="justify-self-end">
+
+        <div class="flex justify-self-end">
+
+
             <button
                     @click="mobileMenuOpen = !mobileMenuOpen"
-                    class="p-4   md:hidden "
+                    class="p-4 flex justify-end  md:hidden "
             >
                 <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -470,6 +473,7 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
             @endif
 
         </ul>
+        <div  class="flex justify-end align-middle mr-4 "> <div class="flex text-white mt-1 align-middle">FOLLOW US</div>  &nbsp;  <a href="https://www.instagram.com/stories/coolwaveua/3275441465802243794?utm_source=ig_story_item_share&igsh=MTc4MmM1YmI2Ng=="><img src="/images/instagram.webp" class=" flex h-8"> </a> </div>
 
     </nav>
 </header>
