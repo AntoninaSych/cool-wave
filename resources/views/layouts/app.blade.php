@@ -29,7 +29,7 @@ $categoryList = \App\Models\Category::getActiveAsTree();
 @include('layouts.navigation')
 <x-category-list :category-list="$categoryList" class=" invisible  sm:visible  -ml-15 -mt-15 -mr-15 px-4"/>
 
-<main  >
+<main class="min-h-screen" >
     {{$slot}}
 </main>
 
@@ -82,7 +82,7 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
 {{--    @endforeach--}}
 
 
-<footer class="bg-white min-w-full  shadow dark:bg-gray-900  ">
+<footer class="sticky top-[100vh] bg-white min-w-full  shadow dark:bg-gray-900  ">
     <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div class="sm:flex sm:items-center sm:justify-between">
             <a href="{{route('products.index')}}" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
