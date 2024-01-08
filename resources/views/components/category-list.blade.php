@@ -1,6 +1,6 @@
 @props(['categoryList'])
 
-<div {{ $attributes->merge(['class' => 'sm:grid-flow-col sm:category-list sm:flex text-white bg-slate-700 z-10 flex sm:justify-center grid']) }}>
+<div {{ $attributes->merge(['class' => 'grid-flow-col category-list flex text-white bg-slate-700 z-10 flex justify-center grid']) }}>
     @if (!empty($categoryList))
         @foreach($categoryList as $category)
             <div class="category-item relative w-[220px]">
