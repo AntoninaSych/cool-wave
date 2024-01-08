@@ -27,7 +27,7 @@ $categoryList = \App\Models\Category::getActiveAsTree();
 ?>
 
 @include('layouts.navigation')
-<x-category-list :category-list="$categoryList" class="-ml-15 -mt-15 -mr-15 px-4"/>
+<x-category-list :category-list="$categoryList" class=" invisible  sm:visible  -ml-15 -mt-15 -mr-15 px-4"/>
 
 <main  >
     {{$slot}}

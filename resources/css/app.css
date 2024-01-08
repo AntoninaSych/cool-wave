@@ -111,3 +111,7 @@
     background-size: cover;
     background-position: center;
 }
+body{
+    overflow-y: scroll!important;
+}
+
