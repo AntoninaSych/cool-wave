@@ -55,7 +55,7 @@ class ProductController extends Controller
                 $query->where('products.title', 'like', "%$search%")
                     ->orWhere('products.description', 'like', "%$search%");
             })
-            ->paginate(5);
+            ->paginate(12);
 
         return view('product.index', [
             'products' => $products

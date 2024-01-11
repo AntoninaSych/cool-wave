@@ -48,13 +48,29 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
         <div class=" sm:max-w-7xl sm:p-6 "><a href="tel:+13479022065" class="justify-self-center  text-2xl"> Call Us : +
                 1 3479 022 065 </a></div>
         {{--TOP SEARCH--}}
-        <div class="invisible  sm:visible">
+        <div class="hidden  sm:block">
             <form action="{{route('product.search')}}" method="GET" class="flex-1" class="text-black">
                 <input type="text" name="search" placeholder="Search for the products"
                        class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md w-full text-black"
                        value="{{request()->get('search')}}"/>
             </form>
         </div>
+
+        <div class="block  sm:hidden ">
+            <form action="{{route('product.search')}}" method="GET" class="flex-1 text-black  mt-6 ml-9 mb-6 ">
+                <input type="text" name="search" placeholder="Search for the products "
+                       class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md inline-block text-black"
+                       value="{{request()->get('search')}}"/>
+                <button type="submit"  class="m-2 text-white align-middle">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+
+                </button>
+{{--                <input type="submit"  value="Search" class="inline-block text-white fa fa-arrow-circle-right fa-lg">--}}
+            </form>
+        </div>
+
         {{--END TOP SEARCH--}}
 
         <nav class="hidden sm:block mx-auto flex max-w-7xl items-center justify-between p-6 mt-15 lg:px-8"
@@ -251,8 +267,8 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
 
             @endif
             @foreach($pages as $page)
-                <li><a href="{{route('page.show', $page->slug )}}"
-                       class="relative flex items-center justify-between py-2 px-3 transition-colors hover:bg-slate-800"
+                <li class="hidden sm:block"><a href="{{route('page.show', $page->slug )}}"
+                       class=" relative flex items-center justify-between py-2 px-3 transition-colors hover:bg-slate-800"
                     >{{$page->name}}
                     </a>
                 </li>
@@ -278,7 +294,11 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
                                    class=" cursor-pointer relative flex items-center justify-between py-2 px-3 transition-colors hover:bg-slate-800">
                                     {{$category->name}}
                                 </a>
-                                <span class="flex mr-3"   @click="cat{{json_decode($category->id)}} = ! cat{{json_decode($category->id)}}" > + </span>
+                                <span class="flex mr-3" :class="cat{{json_decode($category->id)}} ? 'hidden' : 'block'"  -transition:enter.duration.500ms
+                                      x-transition:leave.duration.400ms  @click="cat{{json_decode($category->id)}} = ! cat{{json_decode($category->id)}}" > + </span>
+                                <span class="flex mr-3"  :class="cat{{json_decode($category->id)}} ? 'block' : 'hidden'"  -transition:enter.duration.500ms
+                                      x-transition:leave.duration.400ms  @click="cat{{json_decode($category->id)}} = ! cat{{json_decode($category->id)}}" > -</span>
+
                             @foreach($category->children as $child)
 
                                 <li class="flex justify-between ml-2"
@@ -292,6 +312,13 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
                         @endif
                 @endforeach
             @endif
+                        @foreach($pages as $page)
+                            <li class="block sm:hidden"><a href="{{route('page.show', $page->slug )}}"
+                                                           class=" relative flex items-center justify-between py-2 px-3 transition-colors hover:bg-slate-800"
+                                >{{$page->name}}
+                                </a>
+                            </li>
+            @endforeach
         </ul>
     </div>
     <!--/ Responsive Menu -->
