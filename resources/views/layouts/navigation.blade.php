@@ -45,8 +45,7 @@ $pages = \App\Models\Page::query()->where('type', 1)->get();
         </div>
     </a>
     <div class="grid justify-items-center mt-2">
-        <div class=" sm:max-w-7xl sm:p-6 "><a href="tel:+13479022065" class="justify-self-center  text-2xl"> Call Us : +
-                1 3479 022 065 </a></div>
+        <div class=" sm:max-w-7xl sm:p-6 "><a href="tel:+13479022065" class="justify-self-center  text-2xl"> Call Us : +1 322 233 4665 </a></div>
         {{--TOP SEARCH--}}
         <div class="hidden  sm:block">
             <form action="{{route('product.search')}}" method="GET" class="flex-1" class="text-black">
