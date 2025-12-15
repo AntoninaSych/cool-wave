@@ -1,298 +1,182 @@
 import axiosClient from "../axios";
-import {setProducts} from "./mutations.js";
-import {PRODUCTS_PER_PAGE} from "../constants.js";
+import { PRODUCTS_PER_PAGE } from "../constants.js";
 
-export function getCurrentUser({commit}, data) {
+/**
+ * ------------------------
+ * AUTH
+ * ------------------------
+ */
+
+export function getCurrentUser({ commit }, data) {
     return axiosClient.get('/user', data)
-        .then(({data}) => {
+        .then(({ data }) => {
             commit('setUser', data);
             return data;
-        })
+        });
 }
 
-export function login({commit}, data) {
+export function login({ commit }, data) {
     return axiosClient.post('/login', data)
-        .then(({data}) => {
+        .then(({ data }) => {
             commit('setUser', data.user);
-            commit('setToken', data.token)
+            commit('setToken', data.token);
             return data;
-        })
+        });
 }
 
-
-export function logout({commit}) {
+export function logout({ commit }) {
     return axiosClient.post('/logout')
-        .then((response) => {
-            commit('setToken', null)
-
+        .then(response => {
+            commit('setToken', null);
             return response;
-        })
+        });
 }
 
-export function getProducts({commit}, {
-    url = null,
-    search = '',
-    per_page = PRODUCTS_PER_PAGE,
-    sort_field,
-    sort_direction
-} = {}) {
-    commit('setProducts', [true])
+/**
+ * ------------------------
+ * PRODUCTS
+ * ------------------------
+ */
+
+export function getProducts(
+    { commit },
+    {
+        url = null,
+        search = '',
+        per_page = PRODUCTS_PER_PAGE,
+        sort_field,
+        sort_direction
+    } = {}
+) {
+    commit('setProducts', [true]);
     url = url || 'products';
+
     return axiosClient.get(url, {
-        params: {search, per_page, sort_field, sort_direction}
+        params: { search, per_page, sort_field, sort_direction }
     })
         .then(res => {
-            commit('setProducts', [false, res.data])
+            commit('setProducts', [false, res.data]);
         })
         .catch(() => {
-            commit('setProducts', [false])
-        })
+            commit('setProducts', [false]);
+        });
 }
 
-
-export function getProduct({commit}, id) {
-    return axiosClient.get(`/products/${id}`)
+export function getProduct({ commit }, id) {
+    return axiosClient.get(`/products/${id}`);
 }
 
-export function getUser({commit}, id) {
-    return axiosClient.get(`/users/${id}`)
-}
-
-
-export function getOrders({commit, state}, {url = null, search = '', per_page, sort_field, sort_direction} = {}) {
-    commit('setOrders', [true])
-    url = url || '/orders'
-    const params = {
-        per_page: state.orders.limit,
-    }
-    return axiosClient.get(url, {
-        params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
-        }
-    })
-        .then((response) => {
-            commit('setOrders', [false, response.data])
-        })
-        .catch(() => {
-            commit('setOrders', [false])
-        })
-}
-
-export function getOrder({commit}, id) {
-    return axiosClient.get(`/orders/${id}`)
-}
-
-export function createProduct({commit}, product) {
-    if (product.images && product.images.length) {
-        const form = new FormData();
-        form.append('title', product.title);
-        product.images.forEach(im => form.append('images[]', im))
-        form.append('description', product.description || '');
-        form.append('published', product.published ? 1 : 0);
-        form.append('price', product.price);
-        product = form;
-    }
-    return axiosClient.post('/products', product)
-}
-
-export function updateProduct({commit}, product) {
-    const id = product.id
-    if (product.images && product.images.length) {
-        const form = new FormData();
-        form.append('id', product.id);
-        form.append('title', product.title);
-        product.images.forEach(im => form.append(`images[${im.id}]`, im))
-        if (product.deleted_images) {
-            product.deleted_images.forEach(id => form.append('deleted_images[]', id))
-        }
-        console.log(product.image_positions);
-        for (let id in product.image_positions) {
-            form.append(`image_positions[${id}]`, product.image_positions[id])
-        }
-        form.append('description', product.description || '');
-        form.append('published', product.published ? 1 : 0);
-        form.append('price', product.price);
-        form.append('_method', 'PUT');
-        product = form;
-    } else {
-        product._method = 'PUT'
-    }
-    return axiosClient.post(`/products/${id}`, product)
-}
-
-export function deleteProduct({commit}, id) {
-    return axiosClient.delete(`/products/${id}`)
-}
-
-
-export function getUsers({commit, state}, {url = null, search = '', per_page, sort_field, sort_direction} = {}) {
-    commit('setUsers', [true])
-    url = url || '/users'
-    const params = {
-        per_page: state.users.limit,
-    }
-    return axiosClient.get(url, {
-        params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
-        }
-    })
-        .then((response) => {
-            commit('setUsers', [false, response.data])
-        })
-        .catch(() => {
-            commit('setUsers', [false])
-        })
-}
-
-export function createUser({commit}, user) {
-    return axiosClient.post('/users', user)
-}
-
-export function updateUser({commit}, user) {
-    return axiosClient.put(`/users/${user.id}`, user)
-}
-
-export function deleteUser({commit}, id) {
-    return axiosClient.delete(`/users/${id}`)
-}
-
-export function getCustomers({commit, state}, {url = null, search = '', per_page, sort_field, sort_direction} = {}) {
-    commit('setCustomers', [true])
-    url = url || '/customers'
-    const params = {
-        per_page: state.customers.limit,
-    }
-    return axiosClient.get(url, {
-        params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
-        }
-    })
-        .then((response) => {
-            commit('setCustomers', [false, response.data])
-        })
-        .catch(() => {
-            commit('setCustomers', [false])
-        })
-}
-
-export function getCustomer({commit}, id) {
-    return axiosClient.get(`/customers/${id}`)
-}
-
-export function createCustomer({commit}, customer) {
-    return axiosClient.post('/customers', customer)
-}
-
-export function updateCustomer({commit}, customer) {
-    return axiosClient.put(`/customers/${customer.id}`, customer)
-}
-
-export function deleteCustomer({commit}, customer) {
-    return axiosClient.delete(`/customers/${customer.id}`)
-}
-
-export function getCountries({commit}) {
-    return axiosClient.get('countries')
-        .then(({data}) => {
-            commit('setCountries', data)
-        })
-}
-
-export function getCategories({commit, state}, {sort_field, sort_direction} = {}) {
-    commit('setCategories', [true])
-
-    return axiosClient.get('/categories', {
-        params: {
-            sort_field, sort_direction
-        }
-    })
-        .then((response) => {
-            commit('setCategories', [false, response.data])
-        })
-        .catch(() => {
-            commit('setCategories', [false])
-        })
-}
-
-
-export function createCategory({commit}, category) {
-    return axiosClient.post('/categories', category)
-}
-
-export function updateCategory({commit}, category) {
-    return axiosClient.put(`/categories/${category.id}`, category)
-}
-
-export function deleteCategory({commit}, id) {
-    return axiosClient.delete(`/categories/${id}`)
-}
-
-
-// -----------------PAGeS
-export function getPages({commit}, {
-    url = null,
-    search = '',
-    per_page = PRODUCTS_PER_PAGE,
-    sort_field,
-    sort_direction
-} = {}) {
-    commit('setPages', [true])
-    url = url || 'pages';
-    return axiosClient.get(url, {
-        params: {search, per_page, sort_field, sort_direction}
-    })
-        .then(res => {
-            commit('setPages', [false, res.data])
-        })
-        .catch(() => {
-            commit('setPages', [false])
-        })
-}
-
-export function getPage({commit}, id) {
-    return axiosClient.get(`/pages/${id}`)
-}
-
-export function deletePage({commit}, id) {
-    return axiosClient.delete(`/pages/${id}`)
-}
-
-
-export function createPage({commit}, page) {
-
+/**
+ * Create product
+ * Fully compatible with ProductRequest
+ */
+export function createProduct({ commit }, product) {
     const form = new FormData();
-    form.append('title', page.title);
-    form.append('name', page.name);
-    form.append('meta', page.meta);
-    form.append('short_description', page.short_description || '');
-    form.append('long_description', page.long_description || '');
-    form.append('published', page.published ? 1 : 0);
-    form.append('type', page.type ? 1 : 0);
-    page = form;
 
-    return axiosClient.post('/pages', page)
+    form.append('title', product.title);
+    form.append('price', product.price);
+    form.append('description', product.description || '');
+    form.append('published', product.published ? 1 : 0);
+
+    // Append categories
+    if (Array.isArray(product.categories)) {
+        product.categories.forEach(categoryId => {
+            form.append('categories[]', categoryId);
+        });
+    }
+
+    // Append images (ONLY File objects)
+    if (Array.isArray(product.images)) {
+        product.images.forEach(file => {
+            if (file instanceof File) {
+                form.append('images[]', file);
+            }
+        });
+    }
+
+    return axiosClient.post('/products', form);
 }
 
-export function updatePage({commit}, page) {
-    const id = page.id
-
+/**
+ * Update product
+ * Correct handling of images, categories and deleted images
+ */
+export function updateProduct({ commit }, product) {
     const form = new FormData();
-    form.append('id', page.id);
-    form.append('name', page.name);
-    form.append('title', page.title);
-    form.append('meta', page.meta);
-    form.append('type', page.type ? 1 : 0);
-    form.append('short_description', page.short_description || '');
-    form.append('long_description', page.long_description || '');
-    form.append('published', page.published ? 1 : 0);
+
+    form.append('id', product.id);
+    form.append('title', product.title);
+    form.append('price', product.price);
+    form.append('description', product.description || '');
+    form.append('published', product.published ? 1 : 0);
+
+    // Append categories
+    if (Array.isArray(product.categories)) {
+        product.categories.forEach(categoryId => {
+            form.append('categories[]', categoryId);
+        });
+    }
+
+    // Append NEW images only (File objects)
+    if (Array.isArray(product.images)) {
+        product.images.forEach(file => {
+            if (file instanceof File) {
+                form.append('images[]', file);
+            }
+        });
+    }
+
+    // Append deleted images
+    if (Array.isArray(product.deleted_images)) {
+        product.deleted_images.forEach(imageId => {
+            form.append('deleted_images[]', imageId);
+        });
+    }
+
+    // Append image positions
+    if (product.image_positions && typeof product.image_positions === 'object') {
+        Object.keys(product.image_positions).forEach(imageId => {
+            form.append(`image_positions[${imageId}]`, product.image_positions[imageId]);
+        });
+    }
+
     form.append('_method', 'PUT');
 
-    page = form;
+    return axiosClient.post(`/products/${product.id}`, form);
+}
 
+export function deleteProduct({ commit }, id) {
+    return axiosClient.delete(`/products/${id}`);
+}
 
+/**
+ * ------------------------
+ * CATEGORIES
+ * ------------------------
+ */
 
-    return axiosClient.post(`/pages/${id}`, page)
+export function getCategories({ commit }, { sort_field, sort_direction } = {}) {
+    commit('setCategories', [true]);
+
+    return axiosClient.get('/categories', {
+        params: { sort_field, sort_direction }
+    })
+        .then(response => {
+            commit('setCategories', [false, response.data]);
+        })
+        .catch(() => {
+            commit('setCategories', [false]);
+        });
+}
+
+export function createCategory({ commit }, category) {
+    return axiosClient.post('/categories', category);
+}
+
+export function updateCategory({ commit }, category) {
+    return axiosClient.put(`/categories/${category.id}`, category);
+}
+
+export function deleteCategory({ commit }, id) {
+    return axiosClient.delete(`/categories/${id}`);
 }

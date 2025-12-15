@@ -1,167 +1,175 @@
 <template>
-  <div class="flex flex-wrap gap-1">
-<!--    <pre>-->
-<!--      {{ imageUrls.map(im => im.id) }}-->
-<!--    </pre>-->
-    <Sortable
-        :list="imageUrls"
-        item-key="id"
-        class="flex gap-1 flex-wrap"
-        @end="onImageDragEnd"
-    >
-      <template #item="{element:image, index}">
-        <div
-            class="relative w-[120px] h-[120px] rounded border border-dashed flex items-center justify-center hover:border-purple-500 overflow-hidden">
-      <img :src="image.url" class="max-w-full max-h-full" :class="image.deleted ? 'opacity-50' : ''">
-      <small v-if="image.deleted"
-             class="absolute left-0 bottom-0 right-0 py-1 px-2 bg-black opacity-75 w-100 text-white justify-between items-center flex">
-        To be deleted
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-             class="w-4 h-4 cursor-pointer"
-             @click="revertImage(image)">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"/>
-        </svg>
-
-      </small>
-      <span class="absolute top-1 right-1 cursor-pointer" @click="removeImage(image)">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-          <path
-              d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
-        </svg>
-      </span>
-    </div>
-      </template>
-    </Sortable>
+  <div class="flex flex-wrap gap-4">
+    <!-- Images -->
     <div
-        class="relative w-[120px] h-[120px] rounded border border-dashed flex items-center justify-center hover:border-purple-500 overflow-hidden">
-      <span>
-        Upload
-      </span>
-      <input type="file" class="absolute left-0 top-0 bottom-0 right-0 w-full h-full opacity-0"
-             @change="onFileChange" multiple>
+        v-for="(image, index) in previewImages"
+        :key="image.key"
+        class="relative w-32 h-32 border border-dashed rounded-lg flex items-center justify-center cursor-move"
+        draggable="true"
+        @dragstart="onDragStart(index)"
+        @dragover.prevent
+        @drop="onDrop(index)"
+    >
+      <img
+          v-if="image.url"
+          :src="image.url"
+          class="w-full h-full object-cover rounded-lg"
+          alt="Preview"
+      />
+
+      <button
+          type="button"
+          class="absolute top-1 right-1 bg-white rounded-full shadow p-1"
+          @click="removeImage(image)"
+      >
+        ✕
+      </button>
     </div>
+
+    <!-- Upload -->
+    <label
+        class="w-32 h-32 border border-dashed rounded-lg flex items-center justify-center cursor-pointer text-gray-500 hover:text-gray-700"
+    >
+      Upload
+      <input
+          type="file"
+          multiple
+          accept="image/*"
+          class="hidden"
+          @change="onFileChange"
+      />
+    </label>
   </div>
 </template>
 
 <script setup>
-// Imports
-import {Sortable} from "sortablejs-vue3";
-import {v4 as uuidv4} from 'uuid';
-import {onMounted, ref, watch} from "vue";
+import { computed, ref } from 'vue'
 
-// Uses
-
-// Refs
-
-const files = ref([])
-const imageUrls = ref([])
-const deletedImages = ref([])
-const imagePositions = ref([])
-
-// Props & Emit
-const props = defineProps(['modelValue', 'deletedImages', 'images'])
-const emit = defineEmits(['update:modelValue', 'update:deletedImages', 'update:imagePositions'])
-
-// Computed
-
-// Methods
-function onFileChange($event) {
-  const chosenFiles = [...$event.target.files];
-  files.value = [...files.value, ...chosenFiles];
-  $event.target.value = ''
-  const allPromises = [];
-  for (let file of chosenFiles) {
-    file.id = uuidv4()
-    const promise = readFile(file)
-    allPromises.push(promise)
-    promise
-        .then(url => {
-          imageUrls.value.push({
-            url,
-            id: file.id
-          })
-        })
+const props = defineProps({
+  images: {
+    type: Array,
+    required: true
+  },
+  deletedImages: {
+    type: Array,
+    required: true
+  },
+  imagePositions: {
+    type: Object,
+    required: true
   }
-  Promise.all(allPromises)
-      .then(() => {
-        updateImagePositions()
-      })
-  emit('update:modelValue', files.value)
+})
+
+const emit = defineEmits([
+  'update:images',
+  'update:deleted-images',
+  'update:image-positions'
+])
+
+const draggedIndex = ref(null)
+
+/**
+ * Resolve image URL:
+ * - absolute URL -> use as is
+ * - relative path -> prepend /storage
+ */
+function resolveImageUrl(path) {
+  if (!path) return null
+
+  if (/^https?:\/\//i.test(path)) {
+    return path
+  }
+
+  const cleanPath = path.replace(/^\/?storage\//, '')
+  return `${window.location.protocol}//${window.location.hostname}/storage/${cleanPath}`
 }
 
-function readFile(file) {
-  return new Promise((resolve, reject) => {
-    const fileReader = new FileReader()
-    fileReader.readAsDataURL(file)
-    fileReader.onload = () => {
-      resolve(fileReader.result)
+/**
+ * Normalize images for preview
+ */
+const previewImages = computed(() => {
+  return props.images.map((image) => {
+    // New uploaded file
+    if (image instanceof File) {
+      return {
+        key: `${image.name}-${image.size}`,
+        file: image,
+        url: URL.createObjectURL(image)
+      }
     }
-    fileReader.onerror = reject
+
+    // Existing backend image
+    const path =
+        image.url ||
+        image.path ||
+        image.image ||
+        null
+
+    return {
+      key: `image-${image.id}`,
+      id: image.id,
+      url: resolveImageUrl(path)
+    }
   })
+})
+
+function onFileChange(event) {
+  const files = Array.from(event.target.files || [])
+  emit('update:images', [...props.images, ...files])
+  event.target.value = ''
 }
 
 function removeImage(image) {
-  if (image.isProp) {
-    deletedImages.value.push(image.id)
-    image.deleted = true;
+  const deleted = Array.isArray(props.deletedImages)
+      ? props.deletedImages
+      : []
 
-    emit('update:deletedImages', deletedImages.value)
-  } else {
-    files.value = files.value.filter(f => f.id !== image.id)
-    imageUrls.value = imageUrls.value.filter(f => f.id !== image.id)
-
-    emit('update:modelValue', files.value)
+  if (image.id) {
+    emit('update:deleted-images', [...deleted, image.id])
   }
-  updateImagePositions();
-}
 
-function revertImage(image) {
-  if (image.isProp) {
-    deletedImages.value = deletedImages.value.filter(id => id !== image.id)
-    image.deleted = false;
-
-    emit('update:deletedImages', deletedImages.value)
-  }
-}
-
-function onImageDragEnd(event) {
-  const {newIndex, oldIndex} = event
-
-  const [tmp] = imageUrls.value.splice(oldIndex, 1)
-
-  imageUrls.value.splice(newIndex, 0, tmp)
-  updateImagePositions()
-}
-
-function updateImagePositions() {
-  imagePositions.value = Object.fromEntries(
-      imageUrls.value.filter(im => !im.deleted)
-          .map((im, ind) => [im.id, ind + 1])
+  emit(
+      'update:images',
+      props.images.filter((img) => {
+        if (img instanceof File) {
+          return img !== image.file
+        }
+        return img.id !== image.id
+      })
   )
-  emit('update:imagePositions', imagePositions.value)
-
 }
 
+/**
+ * Drag & Drop ordering
+ */
+function onDragStart(index) {
+  draggedIndex.value = index
+}
 
-// Hooks
-watch('props.images', () => {
-  console.log(props.images)
-  imageUrls.value = [
-    ...imageUrls.value,
-    ...props.images.map(im => ({
-      ...im,
-      isProp: true
-    }))
-  ]
-  updateImagePositions()
-}, {immediate: true, deep: true})
-onMounted(() => {
-  emit('update:modelValue', [])
-  emit('update:deletedImages', deletedImages.value)
-})
+function onDrop(targetIndex) {
+  if (draggedIndex.value === null) return
 
+  const reordered = [...props.images]
+  const [moved] = reordered.splice(draggedIndex.value, 1)
+  reordered.splice(targetIndex, 0, moved)
+
+  emit('update:images', reordered)
+
+  const positions = {}
+  reordered.forEach((img, index) => {
+    if (!(img instanceof File) && img.id) {
+      positions[img.id] = index
+    }
+  })
+
+  emit('update:image-positions', positions)
+
+  draggedIndex.value = null
+}
 </script>
 
 <style scoped>
-
+[draggable="true"]:active {
+  opacity: 0.7;
+}
 </style>
